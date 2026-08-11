@@ -2,20 +2,16 @@
 
 import { useState, type PointerEvent as ReactPointerEvent } from "react";
 
-const accents = ["a", "å", "ä", "æ", "à", "â", "ã"];
 const navigation = ["ABOUT", "FOUNDATION", "SEASONS", "ARCHIVE", "MANIFESTO"];
 const rowCount = 13;
 const columnCount = 9;
 
-const accentMatrix = Array.from({ length: rowCount }, (_, row) =>
-  Array.from(
-    { length: columnCount },
-    (_, column) => accents[(row + Math.floor(column / 2)) % accents.length],
-  ),
+const accentMatrix = Array.from({ length: rowCount }, () =>
+  Array.from({ length: columnCount }, () => "a"),
 );
 
 const aeaMatrix = Array.from({ length: rowCount }, () =>
-  Array.from({ length: columnCount }, (_, column) => ["A", "E", "A"][column % 3]),
+  Array.from({ length: columnCount }, (_, column) => ["a", "e", "a"][column % 3]),
 );
 
 export default function Home() {
