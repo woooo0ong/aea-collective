@@ -4,8 +4,8 @@ import { useState, type PointerEvent as ReactPointerEvent } from "react";
 
 const accents = ["a", "å", "ä", "æ", "à", "â", "ã"];
 const navigation = ["ABOUT", "FOUNDATION", "SEASONS", "ARCHIVE", "MANIFESTO"];
-const rowCount = 9;
-const columnCount = 13;
+const rowCount = 13;
+const columnCount = 9;
 
 const accentMatrix = Array.from({ length: rowCount }, (_, row) =>
   Array.from(
@@ -14,8 +14,8 @@ const accentMatrix = Array.from({ length: rowCount }, (_, row) =>
   ),
 );
 
-const aeaMatrix = Array.from({ length: rowCount }, (_, row) =>
-  Array.from({ length: columnCount }, (_, column) => ["A", "E", "A"][(row + column) % 3]),
+const aeaMatrix = Array.from({ length: rowCount }, () =>
+  Array.from({ length: columnCount }, (_, column) => ["A", "E", "A"][column % 3]),
 );
 
 export default function Home() {

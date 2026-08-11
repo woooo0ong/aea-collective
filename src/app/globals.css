@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f7f6f2;
+  --paper: #fbfaf7;
   --red: #e52521;
   --ink: #090909;
 }
@@ -14,9 +14,9 @@ body {
   margin: 0;
   background-color: var(--paper);
   background-image:
-    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 78%), transparent 45%),
-    radial-gradient(ellipse at 88% 92%, rgb(210 207 196 / 28%), transparent 52%),
-    repeating-linear-gradient(92deg, rgb(55 51 44 / 2.5%) 0 1px, transparent 1px 5px);
+    radial-gradient(ellipse at 12% 8%, rgb(255 255 255 / 92%), transparent 45%),
+    radial-gradient(ellipse at 88% 92%, rgb(218 215 205 / 18%), transparent 52%),
+    repeating-linear-gradient(92deg, rgb(55 51 44 / 1.6%) 0 1px, transparent 1px 5px);
   color: var(--ink);
   font-family: var(--font-inter), Arial, sans-serif;
 }
@@ -37,7 +37,7 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   content: "";
   pointer-events: none;
-  opacity: .18;
+  opacity: .14;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.55'/%3E%3C/svg%3E");
   mix-blend-mode: multiply;
 }
@@ -47,33 +47,37 @@ a { color: inherit; text-decoration: none; }
   z-index: 1;
   display: grid;
   place-items: center;
-  width: clamp(188px, 25vw, 310px);
+  width: max-content;
+  cursor: default;
+  user-select: none;
 }
 
 .accent-grid {
   display: grid;
-  grid-template-columns: repeat(13, 1fr);
+  grid-template-columns: repeat(9, .84em);
   align-items: center;
   justify-items: center;
-  width: 100%;
-  font-size: clamp(.82rem, 1.32vw, 1.28rem);
+  width: max-content;
+  font-size: clamp(.86rem, 1.4vw, 1.34rem);
   font-weight: 700;
-  line-height: .83;
-  letter-spacing: -.08em;
+  line-height: .72;
+  letter-spacing: -.15em;
 }
 
 .glyph {
   position: relative;
   display: grid;
   place-items: center;
-  width: 1em;
-  height: .94em;
+  width: .84em;
+  height: .76em;
 }
 
 .accent-letter, .aea-letter {
   grid-area: 1 / 1;
   display: block;
 }
+
+.accent-letter { opacity: .68; }
 
 .aea-letter {
   opacity: 0;
@@ -84,7 +88,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .glyph[data-active="true"] .aea-letter {
-  opacity: 1;
+  opacity: .74;
 }
 
 .strip-shell {
@@ -159,5 +163,5 @@ a { color: inherit; text-decoration: none; }
   .editorial-nav { left: 46px; gap: 9px; }
   .strip-shell:hover .red-strip,
   .strip-shell:focus-within .red-strip { width: 42px; }
-  .accent-grid { font-size: clamp(.78rem, 4.3vw, 1rem); }
+  .accent-grid { font-size: clamp(.82rem, 4.1vw, 1rem); }
 }
