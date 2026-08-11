@@ -1,5 +1,17 @@
 const accents = ["a", "å", "ä", "æ", "à", "â", "ã"];
 const navigation = ["ABOUT", "FOUNDATION", "SEASONS", "ARCHIVE", "MANIFESTO"];
+const gridSize = 9;
+
+const accentMatrix = Array.from({ length: gridSize }, (_, row) =>
+  Array.from(
+    { length: gridSize },
+    (_, column) => accents[(row + Math.floor(column / 2)) % accents.length],
+  ),
+);
+
+const aeaMatrix = Array.from({ length: gridSize }, (_, row) =>
+  Array.from({ length: gridSize }, (_, column) => ["a", "e", "a"][(row + column) % 3]),
+);
 
 export default function Home() {
   return (
@@ -21,12 +33,14 @@ export default function Home() {
 
       <section className="word-mark" aria-label="AEA typographic composition">
         <div className="accent-grid" aria-hidden="true">
-          {accents.map((letter, index) => (
-            <span className={`glyph glyph-${index + 1}`} key={letter}>
-              <span className="accent-letter">{letter}</span>
-              <span className="aea-letter">aea</span>
-            </span>
-          ))}
+          {accentMatrix.map((row, rowIndex) =>
+            row.map((letter, columnIndex) => (
+              <span className="glyph" key={`${rowIndex}-${columnIndex}`}>
+                <span className="accent-letter">{letter}</span>
+                <span className="aea-letter">{aeaMatrix[rowIndex][columnIndex]}</span>
+              </span>
+            )),
+          )}
         </div>
       </section>
     </main>
