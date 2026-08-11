@@ -54,22 +54,22 @@ a { color: inherit; text-decoration: none; }
 
 .accent-grid {
   display: grid;
-  grid-template-columns: repeat(9, .84em);
+  grid-template-columns: repeat(9, .79em);
   align-items: center;
   justify-items: center;
   width: max-content;
   font-size: clamp(.86rem, 1.4vw, 1.34rem);
-  font-weight: 600;
-  line-height: .72;
-  letter-spacing: -.15em;
+  font-weight: 700;
+  line-height: .69;
+  letter-spacing: -.11em;
 }
 
 .glyph {
   position: relative;
   display: grid;
   place-items: center;
-  width: .84em;
-  height: .76em;
+  width: .79em;
+  height: .72em;
 }
 
 .accent-letter, .aea-letter {
@@ -92,12 +92,18 @@ a { color: inherit; text-decoration: none; }
   opacity: .92;
 }
 
-.accent-grid[data-filled="true"] {
+.accent-grid[data-block="holding"],
+.accent-grid[data-block="revealing"] {
   background: #c43a2f;
 }
 
-.accent-grid[data-filled="true"] .glyph {
+.accent-grid[data-block="holding"] .glyph,
+.accent-grid[data-block="revealing"] .glyph {
   opacity: 0;
+}
+
+.accent-grid[data-block="revealing"] .glyph[data-revealed="true"] {
+  opacity: 1;
 }
 
 .strip-shell {

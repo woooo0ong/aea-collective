@@ -10,8 +10,8 @@ const accentMatrix = Array.from({ length: rowCount }, () =>
   Array.from({ length: columnCount }, () => "a"),
 );
 
-const aeaMatrix = Array.from({ length: rowCount }, () =>
-  Array.from({ length: columnCount }, (_, column) => ["a", "e"][column % 2]),
+const aeaMatrix = Array.from({ length: rowCount }, (_, row) =>
+  Array.from({ length: columnCount }, (_, column) => ["a", "e"][(row + column) % 2]),
 );
 
 const crossOffsets = [
@@ -26,6 +26,8 @@ const cellKey = (row: number, column: number) => `${row}-${column}`;
 
 export default function Home() {
   const [litCells, setLitCells] = useState<Set<string>>(() => new Set());
+  const [blockState, setBlockState] = useState<"none" | "holding" | "revealing">("none");
+  const [revealRadius, setRevealRadius] = useState(-1);
   const expiryTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   useEffect(() => {
@@ -33,7 +35,43 @@ export default function Home() {
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, []);
 
+  useEffect(() => {
+    if (blockState !== "none" || litCells.size !== rowCount * columnCount) return;
+
+    expiryTimers.current.forEach((timer) => clearTimeout(timer));
+    expiryTimers.current.clear();
+    setLitCells(new Set());
+    setBlockState("holding");
+  }, [blockState, litCells]);
+
+  useEffect(() => {
+    if (blockState !== "holding") return;
+
+    const timer = setTimeout(() => {
+      setRevealRadius(0);
+      setBlockState("revealing");
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, [blockState]);
+
+  useEffect(() => {
+    if (blockState !== "revealing") return;
+
+    const maximumRadius = Math.hypot((rowCount - 1) / 2, (columnCount - 1) / 2);
+    if (revealRadius > maximumRadius) {
+      setRevealRadius(-1);
+      setBlockState("none");
+      return;
+    }
+
+    const timer = setTimeout(() => setRevealRadius((current) => current + 1), 90);
+    return () => clearTimeout(timer);
+  }, [blockState, revealRadius]);
+
   function updatePointerCell(event: ReactPointerEvent<HTMLElement>) {
+    if (blockState !== "none") return;
+
     const bounds = event.currentTarget.getBoundingClientRect();
     const column = Math.min(columnCount - 1, Math.max(0, Math.floor(((event.clientX - bounds.left) / bounds.width) * columnCount)));
     const row = Math.min(rowCount - 1, Math.max(0, Math.floor(((event.clientY - bounds.top) / bounds.height) * rowCount)));
@@ -63,12 +101,10 @@ export default function Home() {
             next.delete(key);
             return next;
           });
-        }, 2000),
+        }, 3000),
       );
     });
   }
-
-  const isFilled = litCells.size === rowCount * columnCount;
 
   return (
     <main className="poster">
@@ -93,13 +129,20 @@ export default function Home() {
         onPointerMove={updatePointerCell}
         onPointerDown={updatePointerCell}
       >
-        <div className="accent-grid" data-filled={isFilled} aria-hidden="true">
+        <div className="accent-grid" data-block={blockState} aria-hidden="true">
           {accentMatrix.map((row, rowIndex) =>
             row.map((letter, columnIndex) => {
               const isActive = litCells.has(cellKey(rowIndex, columnIndex));
+              const isRevealed = blockState === "revealing"
+                && Math.hypot(rowIndex - (rowCount - 1) / 2, columnIndex - (columnCount - 1) / 2) <= revealRadius;
 
               return (
-                <span className="glyph" data-active={isActive} key={`${rowIndex}-${columnIndex}`}>
+                <span
+                  className="glyph"
+                  data-active={isActive}
+                  data-revealed={isRevealed}
+                  key={`${rowIndex}-${columnIndex}`}
+                >
                   <span className="accent-letter">{letter}</span>
                   <span className="aea-letter">{aeaMatrix[rowIndex][columnIndex]}</span>
                 </span>
