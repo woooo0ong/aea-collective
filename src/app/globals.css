@@ -1,26 +1,172 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f7f6f2;
+  --red: #e52521;
+  --ink: #090909;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+* { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html, body { min-height: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.poster {
+  position: relative;
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+}
+
+.word-mark {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: clamp(142px, 18vw, 216px);
+  aspect-ratio: 1;
+}
+
+.accent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  font-size: clamp(1.65rem, 3.15vw, 3.2rem);
+  font-weight: 500;
+  line-height: .72;
+  letter-spacing: -.13em;
+}
+
+.glyph {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 1.08em;
+  height: .88em;
+}
+
+.glyph-1 { grid-column: 2; grid-row: 1; }
+.glyph-2 { grid-column: 1; grid-row: 2; }
+.glyph-3 { grid-column: 2; grid-row: 2; }
+.glyph-4 { grid-column: 3; grid-row: 2; }
+.glyph-5 { grid-column: 1; grid-row: 3; }
+.glyph-6 { grid-column: 2; grid-row: 3; }
+.glyph-7 { grid-column: 3; grid-row: 3; }
+
+.accent-letter, .aea-letter {
+  grid-area: 1 / 1;
+  display: block;
+  transition: opacity 190ms ease, transform 190ms ease;
+}
+
+.aea-letter {
+  opacity: 0;
+  font-size: .44em;
+  letter-spacing: -.1em;
+  transform: scale(.75);
+}
+
+.word-mark:hover .accent-letter,
+.word-mark:focus-within .accent-letter {
+  opacity: 0;
+  transform: scale(.78);
+}
+
+.word-mark:hover .aea-letter,
+.word-mark:focus-within .aea-letter {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.strip-shell {
+  position: fixed;
+  z-index: 5;
+  inset: 0 auto 0 0;
+  width: min(82vw, 420px);
+  pointer-events: none;
+}
+
+.red-strip {
+  position: absolute;
+  z-index: 2;
+  inset: 0 auto 0 0;
+  width: 32px;
+  background: var(--red);
+  pointer-events: auto;
+  cursor: e-resize;
+  transition: width 290ms cubic-bezier(.2, .8, .2, 1), clip-path 290ms cubic-bezier(.2, .8, .2, 1);
+  clip-path: polygon(0 0, 100% 0, 100% 15%, 87% 21%, 100% 29%, 88% 39%, 100% 48%, 86% 59%, 100% 69%, 89% 79%, 100% 88%, 91% 100%, 0 100%);
+}
+
+.strip-label {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 9px;
+  color: var(--paper);
+  font-size: 9px;
+  letter-spacing: .08em;
+  pointer-events: none;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: left top;
+  transition: opacity 160ms ease;
+}
+
+.editorial-nav {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 58px;
+  display: grid;
+  gap: 10px;
+  pointer-events: none;
+  font-size: clamp(.72rem, 1vw, .86rem);
+  letter-spacing: .06em;
+  line-height: 1.05;
+  opacity: 0;
+  transform: translate(-16px, -50%);
+  transition: opacity 180ms ease 40ms, transform 260ms cubic-bezier(.2, .8, .2, 1) 40ms;
+}
+
+.editorial-nav a { width: max-content; }
+.editorial-nav a:hover, .editorial-nav a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+
+.strip-shell:hover .red-strip,
+.strip-shell:focus-within .red-strip {
+  width: 50px;
+  clip-path: polygon(0 0, 100% 0, 88% 7%, 100% 13%, 77% 21%, 98% 29%, 73% 36%, 100% 45%, 76% 53%, 98% 62%, 74% 71%, 100% 79%, 77% 88%, 98% 94%, 86% 100%, 0 100%);
+}
+
+.strip-shell:hover .editorial-nav,
+.strip-shell:focus-within .editorial-nav {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, -50%);
+}
+
+.strip-shell:hover .strip-label,
+.strip-shell:focus-within .strip-label { opacity: 0; }
+
+@media (max-width: 600px) {
+  .red-strip { width: 25px; }
+  .strip-label { left: 7px; }
+  .editorial-nav { left: 46px; gap: 9px; }
+  .strip-shell:hover .red-strip,
+  .strip-shell:focus-within .red-strip { width: 42px; }
+  .accent-grid { font-size: clamp(1.55rem, 8.8vw, 2.25rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 1ms !important; }
 }
